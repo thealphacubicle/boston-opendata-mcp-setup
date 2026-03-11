@@ -1,7 +1,7 @@
 {
   "name": "boston-opendata-mcp-setup",
-  "version": "1.1.0",
-  "description": "One-command setup for the Boston OpenData MCP server in Claude Desktop or Cursor",
+  "version": "1.2.0",
+  "description": "One-command setup for the Boston OpenData MCP server in Claude Desktop, Cursor, or Gemini CLI",
   "main": "setup.js",
   "bin": {
     "boston-opendata-mcp-setup": "setup.js"

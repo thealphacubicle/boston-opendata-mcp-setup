@@ -7,27 +7,33 @@ const { execSync } = require('child_process');
 
 const isCursor = process.argv.includes('--cursor');
 const isClaude = process.argv.includes('--claude');
+const isGemini = process.argv.includes('--gemini');
 
-if (!isCursor && !isClaude) {
+if (!isCursor && !isClaude && !isGemini) {
   console.log('Which app would you like to configure?');
-  console.log('  npx boston-opendata-mcp-setup --claude    (Claude Desktop)');
-  console.log('  npx boston-opendata-mcp-setup --cursor    (Cursor)');
+  console.log('  npx boston-opendata-mcp-setup --claude     (Claude Desktop)');
+  console.log('  npx boston-opendata-mcp-setup --cursor     (Cursor)');
+  console.log('  npx boston-opendata-mcp-setup --gemini     (Gemini CLI)');
   process.exit(0);
 }
 
 const MCP_SERVER_KEY = 'Boston OpenData';
-const MCP_SERVER_CONFIG = {
-  command: 'npx',
-  args: [
-    '-y',
-    'mcp-remote',
-    'https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp'
-  ]
-};
+const MCP_SERVER_URL = 'https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp';
+const MCP_SERVER_CONFIG = isGemini
+  ? { httpUrl: MCP_SERVER_URL }
+  : {
+      command: 'npx',
+      args: ['-y', 'mcp-remote', MCP_SERVER_URL]
+    };
 
 function getConfigPath() {
   const platform = os.platform();
   console.log(`🔍 Detecting OS: ${platform}`);
+
+  if (isGemini) {
+    const base = platform === 'win32' ? process.env.USERPROFILE : os.homedir();
+    return path.join(base, '.gemini', 'settings.json');
+  }
 
   if (platform === 'darwin') {
     if (isCursor) {
@@ -50,6 +56,12 @@ function getConfigPath() {
 }
 
 function restartApp() {
+  if (isGemini) {
+    console.log('\n✅ Config written! Please restart Gemini CLI for changes to take effect.');
+    console.log('   Then run /mcp inside Gemini CLI to verify Boston OpenData is listed.');
+    return;
+  }
+
   if (isCursor) {
     console.log('\n✅ Please restart Cursor for the changes to take effect.');
     return;
@@ -87,6 +99,8 @@ function main() {
     console.log('⚙️  Configuring for Cursor...');
   } else if (isClaude) {
     console.log('⚙️  Configuring for Claude Desktop...');
+  } else if (isGemini) {
+    console.log('🔧 Configuring for Gemini CLI...');
   }
 
   // Resolve config file path
@@ -166,11 +180,13 @@ function main() {
   restartApp();
 
   // Success message
-  const delay = isCursor ? 0 : 2000;
+  const delay = (isCursor || isGemini) ? 0 : 2000;
   setTimeout(() => {
     console.log('\n🎉 Setup complete!');
     if (isCursor) {
       console.log('   After restarting Cursor, look for the MCP server in your tools to confirm it is active.');
+    } else if (isGemini) {
+      // restart message already printed above
     } else {
       console.log('   Look for the 🔨 hammer icon in Claude Desktop to confirm the MCP server is active.');
     }

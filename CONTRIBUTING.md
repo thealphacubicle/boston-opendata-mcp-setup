@@ -17,6 +17,9 @@ Releases are triggered by pushing a version tag. There is no CI token required â
 ```bash
 git checkout main
 git pull
+
+# After makiing your changes...
+git commit -m "<commit message>"
 ```
 
 **2. Bump the version**
@@ -41,8 +44,11 @@ The `--follow-tags` flag pushes the version tag alongside the commit. GitHub Act
 
 ### Semver guidance
 
-| Change type | Bump |
-|---|---|
-| Fix a bug, update a dependency | `patch` |
+
+| Change type                           | Bump    |
+| ------------------------------------- | ------- |
+| Fix a bug, update a dependency        | `patch` |
 | Add a new IDE/client target, new flag | `minor` |
 | Change CLI interface, remove a target | `major` |
+
+

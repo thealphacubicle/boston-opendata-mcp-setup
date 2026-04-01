@@ -7,6 +7,10 @@
     "boston-opendata-mcp-setup": "setup.js"
   },
   "preferGlobal": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thealphacubicle/boston-opendata-mcp-setup"
+  },
   "scripts": {
     "start": "node setup.js"
   },

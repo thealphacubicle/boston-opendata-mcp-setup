@@ -1,28 +1,18 @@
 name: Publish to npm
 on:
   push:
-    branches:
-      - main
-    paths:
-      - "setup.js"
-      - "package.json"
+    tags:
+      - "v*"
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write # ← add this
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
-      - run: npm install -g semantic-release @semantic-release/git @semantic-release/changelog
-      - run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm publish --provenance --access public

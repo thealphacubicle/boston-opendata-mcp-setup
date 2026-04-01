@@ -18,7 +18,7 @@ if (!isCursor && !isClaude && !isGemini) {
 }
 
 const MCP_SERVER_KEY = 'Boston OpenData';
-const MCP_SERVER_URL = 'https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp';
+const MCP_SERVER_URL = 'https://data-mcp.boston.gov/mcp';
 const MCP_SERVER_CONFIG = isGemini
   ? { httpUrl: MCP_SERVER_URL }
   : {
